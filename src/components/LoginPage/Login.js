@@ -7,6 +7,23 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 class Login extends React.Component {
 
+    state = {
+        
+    }
+
+    login =() => {
+        fetch('https://pharmoodlelearning.moodlecloud.com/login/token.php?service=moodle_mobile_app&username=admin&password=K@ibba10')
+        .then (response => response.json())
+        .then (resp => {
+            if (resp.token != undefined){
+                this.props.navigation.navigate('Courselevel')
+            }
+            else {
+                alert ('username or password is incorrect')
+            }
+        })
+    } 
+
     render() {
 
         const navigation=this.props.navigation;
@@ -44,7 +61,7 @@ class Login extends React.Component {
                     <Text style={styles.Text4}>Forgot password?</Text>
                 </View>
                 <View style={styles.View3}>
-                    <TouchableOpacity onPress={() => navigation.navigate('Courselevel')} style={styles.TouchableOpacity1}>
+                    <TouchableOpacity onPress={this.login} style={styles.TouchableOpacity1}>
                         <Text style={styles.Text2}>log in with your account</Text>
                     </TouchableOpacity>
                 </View>
