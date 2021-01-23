@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, TouchableOpacity, Text, ScrollView, Image, ImageBackground, Header, TextInput, CheckBox } from "react-native";
+import { ActivityIndicator, StyleSheet, View, TouchableOpacity, Text, ScrollView, Image, ImageBackground, Header, TextInput, CheckBox } from "react-native";
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -8,18 +8,27 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 class Login extends React.Component {
 
     state = {
-        
+        username: "",
+        password: "",
+        error: "",
+        loader: true,
+        checked: false,
     }
 
     login =() => {
-        fetch('https://pharmoodlelearning.moodlecloud.com/login/token.php?service=moodle_mobile_app&username=admin&password=K@ibba10')
+
+        this.setState({loader: false})
+
+        fetch('https://pharmoodlelearning.moodlecloud.com/login/token.php?service=moodle_mobile_app&username=' + this.state.username+ '&password='+ this.state.password)
         .then (response => response.json())
         .then (resp => {
+            this.setState({loader: true})
             if (resp.token != undefined){
                 this.props.navigation.navigate('Courselevel')
+                this.setState({error: ""})
             }
             else {
-                alert ('username or password is incorrect')
+                this.setState({error: 'username or password is incorrect'})
             }
         })
     } 
@@ -50,11 +59,13 @@ class Login extends React.Component {
                     </TouchableOpacity>
                 </View>
                 <View>
-                    <TextInput style={styles.TextInput} placeholder= "Email" />
-                    <TextInput style={styles.TextInput}  placeholder= "Password" />
+                    <TextInput onChangeText={(username) =>this.setState({username})} style={styles.TextInput} placeholder= "Username" />
+                    <TextInput secureTextEntry onChangeText={(password) =>this.setState({password})} style={styles.TextInput}  placeholder= "Password" />
                 </View>
                 <View style={styles.View2}>
                     <CheckBox
+                    value={this.state.checked}
+                    onValueChange={() => this.setState({checked: !this.state.checked})}
                     style={styles.CheckBox}
                     />
                     <Text style={styles.Text3}>Remember Me?</Text>
@@ -64,6 +75,9 @@ class Login extends React.Component {
                     <TouchableOpacity onPress={this.login} style={styles.TouchableOpacity1}>
                         <Text style={styles.Text2}>log in with your account</Text>
                     </TouchableOpacity>
+                </View>
+                <View style={{marginTop: 50}}>
+                    {this.state.loader ? <Text style={styles.TextError}> {this.state.error} </Text> : <ActivityIndicator size={50} color='blue'/>}
                 </View>
                 <View style={styles.View4}>
                     <Text style={styles.Text3}>Don't have an account?</Text>
@@ -79,6 +93,13 @@ class Login extends React.Component {
 const styles = StyleSheet.create({
     CheckBox: {
         alignSelf: 'center'
+    },
+
+    TextError:{
+        color: 'red',
+        alignSelf: 'center',
+        fontSize: 18,
+        marginTop: 10
     },
 
     View: {

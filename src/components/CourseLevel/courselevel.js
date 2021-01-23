@@ -4,6 +4,11 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 
 
 class Courselevel extends React.Component {
+
+    state={
+        checked: false
+    }
+
     render() {
 
         const navigation=this.props.navigation;
@@ -32,14 +37,18 @@ class Courselevel extends React.Component {
                 </View>
                 <View style={styles.View3}>
                     <CheckBox
+                    value={this.state.checked}
+                    onValueChange={() => this.setState({checked: !this.state.checked})}
                     style={styles.CheckBox}
                     />
                     <Text style={styles.Text2}>Are you sure?</Text>
                 </View>
                 <View style={styles.View4}>
+                    {!this.state.checked ? <Text></Text> : (
                     <TouchableOpacity onPress={() => navigation.navigate('Bottomnav')} style={styles.TouchableOpacity1}>
                         <Text style={styles.Text1}>Continue</Text>
                     </TouchableOpacity>
+                    )}
                 </View>
             </View>
         )
